@@ -7,6 +7,11 @@ from sys import exit
 import tensorflow as tf
 from keras.utils.np_utils import to_categorical
 
+from set_session import initialize_session
+
+
+initialize_session()
+
 
 # X_train, X_test, y_train, y_test = get_train_test(
 #     './data', .1, preprocess_input)
@@ -45,12 +50,16 @@ efn.fit(
     epochs=10,
     verbose=1,
     shuffle=True,
-    validation_split=.1
+    validation_split=.1,
+    workers=0,
+    use_multiprocessing=False
 )
 
 score = efn.evaluate(
     X_test, y_test,
-    verbose=1
+    verbose=1,
+    workers=0,
+    use_multiprocessing=False
 )
 
 print('score:', score)
