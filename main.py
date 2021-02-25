@@ -13,11 +13,12 @@ from set_session import initialize_session
 
 
 if __name__ == '__main__':
+
     initialize_session()
 
     metrics = ['accuracy', 'mse']
 
-    network = {'efnB4': EfficientNetB4, 'efnb3': EfficientNetB3}
+    network = {'efnb4': EfficientNetB4, 'efnb3': EfficientNetB3}
     batch = {'16': 16, '32': 32, '64': 64}
 
     # Init optmizers
@@ -38,16 +39,18 @@ if __name__ == '__main__':
     csv = []
     csv.append(['network', 'batch', 'optimizer'] + metrics)
 
-    os.makedirs('./out', exist_ok=True)
-
-    params = (X_train, y_train, X_test, y_test, metrics, './out')
+    params = (X_train, y_train, X_test, y_test, metrics)
 
     for run in product(network, batch, optimizer):
-        print("network=%s\tbatch=%s\toptimizer=%s" % run)
+        rstr = "network=%sbatch=%soptimizer=%s" % run
+        print(rstr)
+        os.makedirs('./%s' % rstr, exist_ok=True)
         res = run_model(
-            network[run[0]], batch[run[1]], optimizer[run[2]], *params
+            network[run[0]], batch[run[1]], optimizer[run[2]], *params,
+            './%s' % rstr
         )
         csv.append(list(run) + res)
+        print('\t%s' % ', '.join(['%s=%s' % val for val in zip(metrics, res)]))
 
     csv = '\n'.join([','.join([str(i) for i in row]) for row in csv])
 
