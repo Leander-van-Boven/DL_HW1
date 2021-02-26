@@ -14,7 +14,7 @@ from set_session import initialize_session
 
 if __name__ == '__main__':
 
-    initialize_session()
+    #initialize_session()
 
     metrics = ['accuracy', 'mse']
 
